@@ -7,7 +7,7 @@ import { LoadingAnalysis } from "@/components/LoadingAnalysis";
 import { IntroSection } from "@/components/IntroSection";
 import { Footer } from "@/components/Footer";
 import { analyzeFoodImage, FoodAnalysisResult } from "@/services/openai";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast"; // Updated import path
 
 type AppState = "intro" | "upload" | "analyzing" | "results";
 
