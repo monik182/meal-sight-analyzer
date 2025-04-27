@@ -1,3 +1,4 @@
+import OpenAI from 'openai'
 
 export type FoodAnalysisResult = {
   foodItems: FoodItem[];
@@ -21,12 +22,13 @@ export const analyzeFoodImage = async (image: File): Promise<FoodAnalysisResult>
   try {
     // Convert image to base64
     const base64Image = await fileToBase64(image);
-    
+
     // In a real implementation, you would send this to OpenAI's API
     // For now, we'll return mock data after a delay to simulate API call
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(getMockAnalysis());
+        // resolve(getMockAnalysis());
+        resolve(getAnalysis(base64Image));
       }, 2000);
     });
   } catch (error) {
@@ -68,4 +70,34 @@ const getMockAnalysis = (): FoodAnalysisResult => {
     totalMacros: { calories: 554, protein: 39.7, fat: 19.5, carbs: 56 },
     confidenceLevel: "High"
   };
+};
+
+const getAnalysis = async (base64Image: string): Promise<FoodAnalysisResult> => {
+  try {
+    const openai = new OpenAI({
+      apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+      dangerouslyAllowBrowser: true,
+    });
+
+    const response = await openai.responses.create({
+      model: "gpt-4.1-mini",
+      input: [
+        {
+          role: "user",
+          content: [
+            { type: "input_text", text: "what's in this image?" },
+            {
+              type: "input_image",
+              image_url: base64Image,
+              detail: "high"
+            },
+          ],
+        },
+      ],
+    });
+    console.log(response.output_text);
+  } catch (error) {
+    console.error("Error analyzing food image:", error);
+    throw new Error("Failed to analyze food image");
+  }
 };
