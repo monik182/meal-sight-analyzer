@@ -70,6 +70,7 @@ const MacroSummary = ({ macros }: { macros: Macros }) => {
   const proteinPercent = Math.round((macros.protein / totalGrams) * 100) || 0;
   const fatPercent = Math.round((macros.fat / totalGrams) * 100) || 0;
   const carbsPercent = Math.round((macros.carbs / totalGrams) * 100) || 0;
+  const sugarPercent = Math.round((macros.sugar / totalGrams) * 100) || 0;
 
   return (
     <div className="space-y-4">
@@ -82,13 +83,15 @@ const MacroSummary = ({ macros }: { macros: Macros }) => {
           <MacroCircle value={proteinPercent} label="Protein" color="bg-blue-500" />
           <MacroCircle value={fatPercent} label="Fat" color="bg-yellow-500" />
           <MacroCircle value={carbsPercent} label="Carbs" color="bg-green-500" />
+          <MacroCircle value={sugarPercent} label="Sugar" color="bg-red-500" />
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 text-center">
+      <div className="grid grid-cols-4 gap-2 text-center">
         <MacroDetail value={macros.protein} unit="g" label="Protein" />
         <MacroDetail value={macros.fat} unit="g" label="Fat" />
         <MacroDetail value={macros.carbs} unit="g" label="Carbs" />
+        <MacroDetail value={macros.sugar} unit="g" label="Sugar" />
       </div>
     </div>
   );
@@ -141,7 +144,7 @@ const FoodItemCard = ({ item }: { item: FoodItem }) => {
           <h4 className="font-medium">{item.name}</h4>
           <span className="text-sm font-semibold">{Math.round(item.macros.calories)} kcal</span>
         </div>
-        <div className="grid grid-cols-3 gap-2 text-center text-sm">
+        <div className="grid grid-cols-4 gap-2 text-center text-sm">
           <div>
             <span className="font-medium">{Math.round(item.macros.protein * 10) / 10}g</span>
             <span className="block text-xs text-gray-500">Protein</span>
@@ -153,6 +156,10 @@ const FoodItemCard = ({ item }: { item: FoodItem }) => {
           <div>
             <span className="font-medium">{Math.round(item.macros.carbs * 10) / 10}g</span>
             <span className="block text-xs text-gray-500">Carbs</span>
+          </div>
+          <div>
+            <span className="font-medium">{Math.round(item.macros.sugar * 10) / 10}g</span>
+            <span className="block text-xs text-gray-500">Sugar</span>
           </div>
         </div>
       </CardContent>
