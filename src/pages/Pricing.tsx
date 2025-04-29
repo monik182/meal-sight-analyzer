@@ -28,7 +28,7 @@ const pricingPackages = [
     credits: 10,
     price: "$4.99",
     pricePerCredit: "$0.499",
-    features: ["10 meal analyses", "Detailed nutrition breakdown", "Email delivery", "Save analysis history"],
+    features: ["10 meal analyses", "Detailed nutrition breakdown", "Email delivery"],
     popular: false,
   },
   {
@@ -36,7 +36,7 @@ const pricingPackages = [
     credits: 25,
     price: "$9.99",
     pricePerCredit: "$0.399",
-    features: ["25 meal analyses", "Detailed nutrition breakdown", "Email delivery", "Save analysis history", "Priority processing"],
+    features: ["25 meal analyses", "Detailed nutrition breakdown", "Email delivery", "Priority processing", "Advanced recommendations"],
     popular: true,
   },
   {
@@ -44,7 +44,7 @@ const pricingPackages = [
     credits: 50,
     price: "$17.99",
     pricePerCredit: "$0.359",
-    features: ["50 meal analyses", "Detailed nutrition breakdown", "Email delivery", "Save analysis history", "Priority processing", "Advanced recommendations"],
+    features: ["50 meal analyses", "Detailed nutrition breakdown", "Email delivery", "Priority processing", "Advanced recommendations"],
     popular: false,
   },
 ];
