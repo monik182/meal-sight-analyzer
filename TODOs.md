@@ -5,3 +5,4 @@
 - Make the landing page
 - Update prompt to return fail reason
 - Use moderation api
+- Subscribe to get 3 free tokens
