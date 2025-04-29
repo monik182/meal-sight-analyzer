@@ -6,8 +6,9 @@ import { AnalysisResult } from "@/components/AnalysisResult";
 import { LoadingAnalysis } from "@/components/LoadingAnalysis";
 import { IntroSection } from "@/components/IntroSection";
 import { Footer } from "@/components/Footer";
-import { analyzeFoodImage, FoodAnalysisResult } from "@/services/openai";
-import { useToast } from "@/hooks/use-toast"; // Fixed import path
+import { analyzeFoodImage } from "@/services/openai";
+import { FoodAnalysisResult } from "@/types"; // Fixed import from types
+import { useToast } from "@/hooks/use-toast";
 
 type AppState = "intro" | "upload" | "analyzing" | "results";
 
