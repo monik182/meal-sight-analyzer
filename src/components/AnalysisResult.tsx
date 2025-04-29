@@ -1,8 +1,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { FoodAnalysisResult, FoodItem, Macros } from "@/services/openai";
 import { CircleCheck, Info, Utensils } from "lucide-react";
 import { useState } from "react";
 import {
@@ -14,6 +12,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { FoodAnalysisResult, FoodItem, Macros } from '@/types';
+import { generateDietaryRecommendations } from '@/services/openai';
 
 interface AnalysisResultProps {
   result: FoodAnalysisResult;
@@ -35,22 +35,11 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
 
   const confidenceBadgeColor = getConfidenceBadgeColor(result.confidenceLevel);
 
-  const generateRecommendations = () => {
+  const generateRecommendations = async () => {
     setIsLoading(true);
-    
-    // Generate recommendations based on the meal analysis
-    setTimeout(() => {
-      const generatedRecommendations = [
-        "Consider adding more vegetables for additional fiber and micronutrients.",
-        "Try to balance your protein to carbohydrate ratio for sustained energy.",
-        "If you're trying to reduce sugar intake, look for alternatives to any sweetened items in your meal.",
-        "For a more balanced meal, include a source of healthy fats like avocado, nuts, or olive oil.",
-        "Consider portion sizes based on your personal energy needs and activity level."
-      ];
-      
-      setRecommendations(generatedRecommendations);
-      setIsLoading(false);
-    }, 1000);
+    const response = await generateDietaryRecommendations(result);
+    setRecommendations(response);
+    setIsLoading(false);
   };
 
   return (

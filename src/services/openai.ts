@@ -1,27 +1,10 @@
+import { getRecommendationsPromptText, mealAnalysisPromptText } from '@/prompts';
+import { FoodAnalysisResult, UserProfile } from '@/types';
+import { fileToBase64 } from '@/util';
 import OpenAI from 'openai'
-
-export type FoodAnalysisResult = {
-  foodItems: FoodItem[];
-  totalMacros: Macros;
-  confidenceLevel: 'Low' | 'Medium' | 'High';
-};
-
-export type FoodItem = {
-  name: string;
-  macros: Macros;
-};
-
-export type Macros = {
-  calories: number;
-  protein: number;
-  fat: number;
-  carbs: number;
-  sugar: number;
-};
 
 export const analyzeFoodImage = async (image: File): Promise<FoodAnalysisResult> => {
   try {
-    // Convert image to base64
     const base64Image = await fileToBase64(image);
 
     return getAnalysis(base64Image)
@@ -29,15 +12,6 @@ export const analyzeFoodImage = async (image: File): Promise<FoodAnalysisResult>
     console.error("Error analyzing food image:", error);
     throw new Error("Failed to analyze food image");
   }
-};
-
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
 };
 
 // Mock data for development
@@ -79,7 +53,7 @@ const getAnalysis = async (base64Image: string): Promise<FoodAnalysisResult> => 
         {
           role: "user",
           content: [
-            { type: "input_text", text: promptText },
+            { type: "input_text", text: mealAnalysisPromptText },
             {
               type: "input_image",
               image_url: base64Image,
@@ -92,7 +66,7 @@ const getAnalysis = async (base64Image: string): Promise<FoodAnalysisResult> => 
     });
 
     try {
-      console.log(response.output_text);
+      // console.log(response.output_text);
       return JSON.parse(response.output_text) as FoodAnalysisResult;
     } catch (error) {
       console.error("Error parsing JSON:", error);
@@ -108,42 +82,62 @@ const getAnalysis = async (base64Image: string): Promise<FoodAnalysisResult> => 
   }
 };
 
+export const generateDietaryRecommendations = async (
+  foodAnalysis: FoodAnalysisResult,
+  userProfile?: UserProfile
+): Promise<string[]> => {
+  try {
+    const openai = new OpenAI({
+      apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+      dangerouslyAllowBrowser: true,
+    });
 
-const promptText = `
-You are a nutrition analysis system that can identify food from images and provide detailed macro information.
+    const foodItemsText = foodAnalysis.foodItems
+      .map(item => `${item.name}: ${item.macros.calories} calories, ${item.macros.protein}g protein, ${item.macros.fat}g fat, ${item.macros.carbs}g carbs, ${item.macros.sugar}g sugar`)
+      .join('\n');
 
-TASK:
-1. Analyze the provided image.
-2. Determine if the image contains food/meal. If not, respond with a default "Not a food image" result.
-3. If it is food, identify each distinct food item visible in the image.
-4. For each food item, estimate the approximate portion size and its macro nutrient content: calories, protein, fat, and carbs.
-5. Calculate the total macro nutrients for the entire meal.
-6. Provide a confidence level based on image clarity and your ability to identify items accurately.
+    const totalMacrosText = `Total: ${foodAnalysis.totalMacros.calories} calories, ${foodAnalysis.totalMacros.protein}g protein, ${foodAnalysis.totalMacros.fat}g fat, ${foodAnalysis.totalMacros.carbs}g carbs, ${foodAnalysis.totalMacros.sugar}g sugar`;
 
-YOUR RESPONSE MUST BE VALID JSON in the following format with no additional text:
-{
-  "foodItems": [
-    {
-      "name": "Item Name",
-      "macros": { "calories": number, "protein": number, "fat": number, "carbs": number, "sugar": number }
+    const userContext = userProfile ? `
+Additional user context:
+- Goal: ${userProfile.goal}
+- Activity level: ${userProfile.activityLevel}
+- Dietary restrictions: ${userProfile.dietaryRestrictions.join(", ")}
+- Health conditions: ${userProfile.healthConditions.join(", ")}
+    ` : '';
+
+    const promptText = getRecommendationsPromptText(foodItemsText, totalMacrosText, foodAnalysis, userContext);
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4.1-mini",
+      messages: [
+        {
+          role: "user",
+          content: promptText
+        }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.7,
+    });
+
+    const resultText = response.choices[0]?.message?.content || '{"recommendations":[]}';
+    // console.log(resultText);
+    const parsedResponse = JSON.parse(resultText);
+
+    if (Array.isArray(parsedResponse)) {
+      return parsedResponse;
     }
-    // Additional food items...
-  ],
-  "totalMacros": { "calories": number, "protein": number, "fat": number, "carbs": number, "sugar": number },
-  "confidenceLevel": "Low" | "Medium" | "High"
-}
 
-IMPORTANT RULES:
-- Provide numerical values only for macros (no units)
-- Round all values to one decimal place
-- If you cannot identify food in the image, return:
-  {
-    "foodItems": [],
-    "totalMacros": {"calories": 0, "protein": 0, "fat": 0, "carbs": 0, "sugar": 0},
-    "confidenceLevel": "Low"
+    if (Array.isArray(parsedResponse.recommendations)) {
+      return parsedResponse.recommendations;
+    }
+
+    return [];
+  } catch (error) {
+    console.error("Error generating dietary recommendations:", error);
+    return [
+      "Unable to generate personalized recommendations at this time.",
+      "Consider consulting with a nutrition professional for dietary advice."
+    ];
   }
-- Base confidence levels on:
-  * "Low": Poor image quality or unusual/hard to identify foods
-  * "Medium": Standard food items with some uncertainty about quantities
-  * "High": Clear image with easily identifiable standard foods
-`;
+};
