@@ -1,17 +1,28 @@
 
-import { LeafyGreen } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export const Header = () => {
+export function Header() {
   return (
-    <header className="w-full py-4 bg-macrolens-surface border-b border-border/10 shadow-sm">
+    <header className="border-b py-4">
       <div className="container-narrow flex items-center justify-between">
-        <div className="flex items-center gap-2 animate-fade-in">
-          <div className="bg-macrolens-primary-light p-1.5 rounded-full">
-            <LeafyGreen className="w-5 h-5 text-macrolens-primary" />
-          </div>
-          <h1 className="text-xl font-medium text-gray-800">MacroLens</h1>
-        </div>
+        <Link to="/" className="font-bold text-xl text-primary hover:opacity-90 transition-opacity">
+          MacroLens
+        </Link>
+        <nav>
+          <ul className="flex gap-4">
+            <li>
+              <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">
+                Analyze
+              </Link>
+            </li>
+            <li>
+              <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">
+                Pricing
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </div>
     </header>
   );
-};
+}
