@@ -66,7 +66,7 @@ const getMockAnalysis = (): FoodAnalysisResult => {
   };
 };
 
-const getAnalysis = async (base64Image: string): Promise<FoodAnalysisResult | string> => {
+const getAnalysis = async (base64Image: string): Promise<FoodAnalysisResult> => {
   try {
     const openai = new OpenAI({
       apiKey: import.meta.env.VITE_OPENAI_API_KEY,
