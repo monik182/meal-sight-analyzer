@@ -3,7 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { FoodAnalysisResult, FoodItem, Macros } from "@/services/openai";
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, Info, Utensils } from "lucide-react";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface AnalysisResultProps {
   result: FoodAnalysisResult;
@@ -11,6 +21,9 @@ interface AnalysisResultProps {
 }
 
 export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
+  const [recommendations, setRecommendations] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const getConfidenceBadgeColor = (level: string) => {
     switch (level) {
       case 'High': return 'bg-green-100 text-green-800';
@@ -21,6 +34,24 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
   };
 
   const confidenceBadgeColor = getConfidenceBadgeColor(result.confidenceLevel);
+
+  const generateRecommendations = () => {
+    setIsLoading(true);
+    
+    // Generate recommendations based on the meal analysis
+    setTimeout(() => {
+      const generatedRecommendations = [
+        "Consider adding more vegetables for additional fiber and micronutrients.",
+        "Try to balance your protein to carbohydrate ratio for sustained energy.",
+        "If you're trying to reduce sugar intake, look for alternatives to any sweetened items in your meal.",
+        "For a more balanced meal, include a source of healthy fats like avocado, nuts, or olive oil.",
+        "Consider portion sizes based on your personal energy needs and activity level."
+      ];
+      
+      setRecommendations(generatedRecommendations);
+      setIsLoading(false);
+    }, 1000);
+  };
 
   return (
     <div className="w-full animate-fade-in">
@@ -51,6 +82,62 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
         {result.foodItems.map((item, index) => (
           <FoodItemCard key={index} item={item} />
         ))}
+      </div>
+
+      <div className="mb-6">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button 
+              variant="outline" 
+              className="w-full bg-macrolens-primary-light hover:bg-macrolens-primary-light/80 text-macrolens-primary border-none"
+              onClick={generateRecommendations}
+            >
+              <Utensils className="mr-2 h-4 w-4" />
+              Get Dietary Recommendations
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Utensils className="h-5 w-5" /> Dietary Recommendations
+              </DialogTitle>
+              <DialogDescription>
+                Based on your meal analysis, here are some general recommendations.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Alert className="bg-amber-50 border-amber-200">
+                <Info className="h-4 w-4 text-amber-500" />
+                <AlertTitle className="text-amber-700">Disclaimer</AlertTitle>
+                <AlertDescription className="text-amber-600">
+                  These recommendations are for general guidance only and are not professional medical or nutritional advice. 
+                  Please consult with a registered dietitian or healthcare provider for personalized advice.
+                </AlertDescription>
+              </Alert>
+              
+              {isLoading ? (
+                <div className="py-8 flex justify-center">
+                  <div className="animate-pulse flex space-x-2">
+                    <div className="h-2 w-2 bg-macrolens-primary rounded-full"></div>
+                    <div className="h-2 w-2 bg-macrolens-primary rounded-full"></div>
+                    <div className="h-2 w-2 bg-macrolens-primary rounded-full"></div>
+                  </div>
+                </div>
+              ) : (
+                <ul className="space-y-2">
+                  {recommendations.map((recommendation, index) => (
+                    <li key={index} className="flex items-start gap-2 animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                      <span className="h-6 w-6 flex items-center justify-center rounded-full bg-macrolens-primary-light text-macrolens-primary flex-shrink-0">
+                        {index + 1}
+                      </span>
+                      <span>{recommendation}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="flex justify-center mt-8">
