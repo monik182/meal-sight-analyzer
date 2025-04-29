@@ -1,8 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CircleCheck, Info, Utensils } from "lucide-react";
-import { useState } from "react";
+import { CircleCheck, Download, Info, Utensils } from "lucide-react";
+import { useState, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +13,8 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FoodAnalysisResult, FoodItem, Macros } from '@/types';
 import { generateDietaryRecommendations } from '@/services/openai';
+import { generatePDF } from '@/util/pdfGenerator';
+import { useToast } from '@/hooks/use-toast';
 
 interface AnalysisResultProps {
   result: FoodAnalysisResult;
@@ -23,6 +24,9 @@ interface AnalysisResultProps {
 export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
   const [recommendations, setRecommendations] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const analysisRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const getConfidenceBadgeColor = (level: string) => {
     switch (level) {
@@ -42,43 +46,93 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
     setIsLoading(false);
   };
 
+  const handleDownloadPDF = async () => {
+    try {
+      toast({
+        title: "Creating PDF...",
+        description: "Please wait while we generate your meal analysis PDF."
+      });
+      
+      await generatePDF('analysis-content', `meal-analysis-${new Date().toISOString().split('T')[0]}.pdf`);
+      
+      toast({
+        title: "PDF created!",
+        description: "Your meal analysis has been downloaded successfully.",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast({
+        title: "PDF generation failed",
+        description: "There was an error creating your PDF. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="w-full animate-fade-in">
-      <div className="flex items-center justify-center mb-6">
-        <div className="bg-macrolens-primary-light rounded-full p-3">
-          <CircleCheck className="h-8 w-8 text-macrolens-primary" />
+      <div id="analysis-content" className="w-full pb-8">
+        <div className="flex items-center justify-center mb-6">
+          <div className="bg-macrolens-primary-light rounded-full p-3">
+            <CircleCheck className="h-8 w-8 text-macrolens-primary" />
+          </div>
         </div>
-      </div>
-      
-      <h2 className="text-2xl font-bold text-center mb-2">Meal Analysis</h2>
-      <div className="flex justify-center mb-6">
-        <span className={`text-sm font-medium px-3 py-1 rounded-full ${confidenceBadgeColor}`}>
-          {result.confidenceLevel} Confidence
-        </span>
+        
+        <h2 className="text-2xl font-bold text-center mb-2">Meal Analysis</h2>
+        <div className="flex justify-center mb-6">
+          <span className={`text-sm font-medium px-3 py-1 rounded-full ${confidenceBadgeColor}`}>
+            {result.confidenceLevel} Confidence
+          </span>
+        </div>
+
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="text-xl">Total Macronutrients</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <MacroSummary macros={result.totalMacros} />
+          </CardContent>
+        </Card>
+
+        <h3 className="font-semibold text-xl mb-4">Food Items</h3>
+        <div className="space-y-4 mb-6">
+          {result.foodItems.map((item, index) => (
+            <FoodItemCard key={index} item={item} />
+          ))}
+        </div>
+
+        {recommendations.length > 0 && (
+          <div className="mb-8">
+            <h3 className="font-semibold text-xl mb-4">Dietary Recommendations</h3>
+            <Alert className="bg-amber-50 border-amber-200 mb-4">
+              <Info className="h-4 w-4 text-amber-500" />
+              <AlertTitle className="text-amber-700">Disclaimer</AlertTitle>
+              <AlertDescription className="text-amber-600">
+                These recommendations are for general guidance only and are not professional medical or nutritional advice. 
+                Please consult with a registered dietitian or healthcare provider for personalized advice.
+              </AlertDescription>
+            </Alert>
+            <ul className="space-y-2">
+              {recommendations.map((recommendation, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <span className="h-6 w-6 flex items-center justify-center rounded-full bg-macrolens-primary-light text-macrolens-primary flex-shrink-0">
+                    {index + 1}
+                  </span>
+                  <span>{recommendation}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="text-xl">Total Macronutrients</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <MacroSummary macros={result.totalMacros} />
-        </CardContent>
-      </Card>
-
-      <h3 className="font-semibold text-xl mb-4">Food Items</h3>
-      <div className="space-y-4 mb-6">
-        {result.foodItems.map((item, index) => (
-          <FoodItemCard key={index} item={item} />
-        ))}
-      </div>
-
-      <div className="mb-6">
-        <Dialog>
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button 
               variant="outline" 
-              className="w-full bg-macrolens-primary-light hover:bg-macrolens-primary-light/80 text-macrolens-primary border-none"
+              className="flex-1 bg-macrolens-primary-light hover:bg-macrolens-primary-light/80 text-macrolens-primary border-none"
               onClick={generateRecommendations}
             >
               <Utensils className="mr-2 h-4 w-4" />
@@ -127,6 +181,15 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
             </div>
           </DialogContent>
         </Dialog>
+
+        <Button 
+          onClick={handleDownloadPDF}
+          variant="outline" 
+          className="flex-1 bg-macrolens-secondary hover:bg-macrolens-secondary/80 text-macrolens-primary border-none group"
+        >
+          <Download className="mr-2 h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+          Download Analysis as PDF
+        </Button>
       </div>
 
       <div className="flex justify-center mt-8">
