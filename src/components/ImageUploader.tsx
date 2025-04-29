@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Camera, Upload } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface ImageUploaderProps {
   onImageSelected: (file: File) => void;
@@ -61,7 +61,7 @@ export const ImageUploader = ({ onImageSelected }: ImageUploaderProps) => {
       />
 
       {previewImage ? (
-        <div className="relative w-full max-w-md aspect-square border rounded-lg overflow-hidden bg-gray-100">
+        <div className="relative w-full max-w-md aspect-square rounded-2xl overflow-hidden bg-gray-50 shadow-sm">
           <img 
             src={previewImage} 
             alt="Food preview" 
@@ -69,7 +69,7 @@ export const ImageUploader = ({ onImageSelected }: ImageUploaderProps) => {
           />
         </div>
       ) : (
-        <div className="w-full max-w-md aspect-square border-2 border-dashed rounded-lg flex flex-col items-center justify-center bg-gray-50">
+        <div className="w-full max-w-md aspect-square border border-dashed rounded-2xl flex flex-col items-center justify-center bg-gray-50">
           <div className="p-8 text-center">
             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-macrolens-primary-light mb-4">
               <Camera className="h-8 w-8 text-macrolens-primary" />
@@ -83,7 +83,7 @@ export const ImageUploader = ({ onImageSelected }: ImageUploaderProps) => {
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
         <Button 
           onClick={handleCameraClick}
-          className="flex-1 bg-macrolens-primary hover:bg-macrolens-secondary flex gap-2 items-center justify-center"
+          className="flex-1 bg-macrolens-primary hover:bg-macrolens-primary/90 flex gap-2 items-center justify-center rounded-full"
         >
           <Camera className="w-5 h-5" />
           Take Photo
@@ -91,7 +91,7 @@ export const ImageUploader = ({ onImageSelected }: ImageUploaderProps) => {
         <Button 
           onClick={handleUploadClick}
           variant="outline" 
-          className="flex-1 border-macrolens-primary text-macrolens-primary hover:bg-macrolens-primary-light flex gap-2 items-center justify-center"
+          className="flex-1 border-macrolens-primary text-macrolens-primary hover:bg-macrolens-primary-light flex gap-2 items-center justify-center rounded-full"
         >
           <Upload className="w-5 h-5" />
           Upload Photo

@@ -14,10 +14,10 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 122 39% 49%;
-    --primary-foreground: 355.7 100% 97.3%;
+    --primary: 198 84% 48%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 120 33% 64%;
+    --secondary: 210 70% 80%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
@@ -31,9 +31,9 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 122 39% 49%;
+    --ring: 198 84% 48%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
   }
 
   .dark {
@@ -46,10 +46,10 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 122 39% 49%;
-    --primary-foreground: 355.7 100% 97.3%;
+    --primary: 198 84% 48%;
+    --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 120 33% 64%;
+    --secondary: 210 70% 80%;
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
@@ -63,7 +63,7 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 122 39% 49%;
+    --ring: 198 84% 48%;
   }
 }
 
@@ -77,7 +77,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+    @apply font-serif tracking-tight font-normal;
   }
   
   h1 {
@@ -95,4 +95,12 @@
 
 .container-narrow {
   @apply max-w-3xl mx-auto px-4;
+}
+
+.search-input {
+  @apply w-full rounded-full py-2.5 px-4 bg-muted text-foreground placeholder-muted-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary/30;
+}
+
+.tab-active {
+  @apply relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-accent;
 }

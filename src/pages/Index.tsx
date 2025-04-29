@@ -7,7 +7,7 @@ import { LoadingAnalysis } from "@/components/LoadingAnalysis";
 import { IntroSection } from "@/components/IntroSection";
 import { Footer } from "@/components/Footer";
 import { analyzeFoodImage, FoodAnalysisResult } from "@/services/openai";
-import { useToast } from "@/hooks/use-toast"; // Updated import path
+import { useToast } from "@/hooks/use-toast"; // Fixed import path
 
 type AppState = "intro" | "upload" | "analyzing" | "results";
 
@@ -78,7 +78,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
       <main className="flex-1">
         <div className="container-narrow py-6">

@@ -9,7 +9,7 @@ interface IntroSectionProps {
 export const IntroSection = ({ onStartClick }: IntroSectionProps) => {
   return (
     <section className="py-12 text-center animate-fade-in">
-      <h2 className="text-3xl font-bold mb-4">Analyze Your Meals Effortlessly</h2>
+      <h2 className="text-3xl mb-4">Analyze Your Meals Effortlessly</h2>
       <p className="text-lg text-gray-600 mb-8 max-w-xl mx-auto">
         Take or upload a photo of your meal and instantly receive a breakdown of estimated macronutrients - calories, protein, fat, and carbs.
       </p>
@@ -18,7 +18,7 @@ export const IntroSection = ({ onStartClick }: IntroSectionProps) => {
         <Button 
           onClick={onStartClick}
           size="lg"
-          className="bg-macrolens-primary hover:bg-macrolens-secondary px-8 py-6 text-lg rounded-full"
+          className="bg-macrolens-primary hover:bg-macrolens-primary/90 px-8 py-6 text-lg rounded-full"
         >
           Analyze My Meal
         </Button>

@@ -19,6 +19,10 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ["Inter", "system-ui", "sans-serif"],
+				serif: ["Georgia", "serif"],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -64,11 +68,11 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				macrolens: {
-					primary: '#4CAF50',
-					'primary-light': '#E8F5E9',
-					secondary: '#81C784',
+					primary: '#0EA5E9', // Updated to blue
+					'primary-light': '#EFF6FF',
+					secondary: '#93C5FD',
 					accent: '#FF5722',
-					background: '#FAFAFA',
+					background: '#FFFFFF',
 					surface: '#FFFFFF',
 				},
 			},
