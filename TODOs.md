@@ -3,3 +3,4 @@
 - Make the pricing page
 - Make the landing page
 - Update prompt to return fail reason
+- Use moderation api
