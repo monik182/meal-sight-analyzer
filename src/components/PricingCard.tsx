@@ -32,7 +32,7 @@ export function PricingCard({
     >
       <CardHeader className="pb-2 pt-6">
         {popular && (
-          <div className="absolute top-0 right-0 left-0 transform -translate-y-1/2">
+          <div className="top-0 right-0 left-0 transform -translate-y-1/2">
             <span className="bg-accent text-accent-foreground text-xs px-3 py-1 rounded-full font-medium">
               MOST POPULAR
             </span>
