@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -135,35 +136,70 @@
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  background-color: white;
-  padding: 20px;
+  background-color: white !important;
+  padding: 30px !important;
+  color: black !important;
 }
 
 .pdf-optimized .card {
-  break-inside: avoid;
-  margin-bottom: 20px;
+  break-inside: avoid !important;
+  margin-bottom: 20px !important;
+  page-break-inside: avoid !important;
 }
 
 .pdf-optimized h2, 
 .pdf-optimized h3 {
-  break-after: avoid;
-  margin-top: 15px;
-  margin-bottom: 10px;
+  break-after: avoid !important;
+  margin-top: 15px !important;
+  margin-bottom: 10px !important;
+}
+
+/* Specific PDF element styling */
+.pdf-optimized .confidence-badge {
+  display: inline-block !important;
+  margin: 0 auto 20px auto !important;
+  text-align: center !important;
+}
+
+.pdf-optimized .food-item-card {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  margin-bottom: 15px !important;
+}
+
+.pdf-optimized .macro-circle-container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 /* Ensure proper spacing for PDF elements */
 @media print {
   .pdf-optimized {
-    padding: 20mm;
+    padding: 30mm !important;
   }
   
   .pdf-optimized .card {
-    margin: 5mm 0;
-    break-inside: avoid;
+    margin: 10mm 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
   
   .pdf-optimized img {
-    max-width: 100%;
-    height: auto;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .pdf-optimized .food-item-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .pdf-optimized .confidence-badge {
+    display: block !important;
+    text-align: center !important;
+    width: fit-content !important;
+    margin: 0 auto 20px auto !important;
   }
 }

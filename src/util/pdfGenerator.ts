@@ -12,31 +12,53 @@ export const generatePDF = async (elementId: string, fileName: string = 'meal-an
   }
 
   try {
-    // Before generating PDF, apply print-specific styling to ensure proper layout
+    // Before generating PDF, apply print-specific styling for better layout
     const originalStyle = element.getAttribute('style') || '';
     element.setAttribute('style', `${originalStyle}; background-color: white; padding: 20px; max-width: 800px;`);
+    
+    // Add a temporary class to help with PDF generation
+    element.classList.add('pdf-optimized');
 
-    // Create canvas from the element with higher quality settings
+    // Create canvas from the element with improved settings
     const canvas = await html2canvas(element, {
       scale: 2, // Higher scale for better resolution
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
-      windowWidth: 1200, // Fixed width to ensure consistent rendering
+      windowWidth: 1200, // Fixed width for consistent rendering
       onclone: (clonedDoc) => {
         const clonedElement = clonedDoc.getElementById(elementId);
         if (clonedElement) {
-          // Improve spacing in the cloned element
-          clonedElement.style.padding = '20px';
+          // Apply specific styling to the clone for better PDF output
+          clonedElement.style.padding = '30px';
           
-          // Ensure text is properly aligned
-          const textElements = clonedElement.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, div');
-          textElements.forEach((el) => {
-            (el as HTMLElement).style.margin = '8px 0';
+          // Fix confidence badge alignment
+          const confidenceBadge = clonedElement.querySelector('.confidence-badge');
+          if (confidenceBadge) {
+            (confidenceBadge as HTMLElement).style.display = 'inline-block';
+            (confidenceBadge as HTMLElement).style.margin = '0 auto 20px auto';
+          }
+          
+          // Improve macro circles alignment
+          const macroCircles = clonedElement.querySelectorAll('.macro-circle-container');
+          macroCircles.forEach(circle => {
+            (circle as HTMLElement).style.display = 'flex';
+            (circle as HTMLElement).style.flexDirection = 'column';
+            (circle as HTMLElement).style.alignItems = 'center';
+          });
+          
+          // Fix food item cards to avoid breaking across pages
+          const foodCards = clonedElement.querySelectorAll('.food-item-card');
+          foodCards.forEach(card => {
+            (card as HTMLElement).style.pageBreakInside = 'avoid';
+            (card as HTMLElement).style.marginBottom = '15px';
           });
         }
       }
     });
+    
+    // Remove the temporary class
+    element.classList.remove('pdf-optimized');
     
     // Restore original styling
     element.setAttribute('style', originalStyle);
@@ -44,44 +66,41 @@ export const generatePDF = async (elementId: string, fileName: string = 'meal-an
     // Calculate dimensions for PDF (A4 format)
     const imgWidth = 190; // A4 width in mm minus margins
     const pageHeight = 277; // A4 height in mm minus margins
-    const margin = 10; // 10mm margin
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
-    // Create new PDF with margins
+    // Create PDF with appropriate dimensions
     const pdf = new jsPDF('p', 'mm', 'a4');
     
-    // Add image to PDF with margins
     let heightLeft = imgHeight;
     let position = 0;
+    let pageCount = 0;
     
-    // Add first page (with top margin)
-    pdf.addImage(
-      canvas.toDataURL('image/png'), 
-      'PNG', 
-      margin, // left margin
-      margin, // top margin
-      imgWidth, 
-      imgHeight
-    );
-    
-    heightLeft -= pageHeight;
-    
-    // Add additional pages if needed
-    while (heightLeft >= 0) {
-      // Calculate position to avoid cutting content
-      position = heightLeft - imgHeight + margin; // Add margin offset
+    // Calculate how much content can fit on each page
+    while (heightLeft > 0) {
+      // Add a new page for all pages after the first one
+      if (pageCount > 0) {
+        pdf.addPage();
+      }
       
-      pdf.addPage();
+      // Calculate positions to properly split content between pages
+      const heightToDraw = Math.min(pageHeight, heightLeft);
+      const sourceY = pageCount * pageHeight * (canvas.width / imgWidth);
+      
       pdf.addImage(
-        canvas.toDataURL('image/png'), 
+        canvas.toDataURL('image/png', 1.0), 
         'PNG', 
-        margin, // left margin 
-        position, 
+        10, // left margin
+        10, // top margin
         imgWidth, 
-        imgHeight
+        heightToDraw,
+        '', 
+        'FAST',
+        0,
+        sourceY
       );
       
-      heightLeft -= (pageHeight - (2 * margin)); // Account for margins in pagination
+      heightLeft -= pageHeight;
+      pageCount++;
     }
     
     // Save PDF

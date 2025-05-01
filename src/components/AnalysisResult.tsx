@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CircleCheck, Download, FileText, Info, Utensils } from "lucide-react";
@@ -53,18 +54,7 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
         description: "Please wait while we generate your meal analysis PDF."
       });
       
-      // Temporarily add a PDF-specific class to optimize for PDF generation
-      const analysisContent = document.getElementById('analysis-content');
-      if (analysisContent) {
-        analysisContent.classList.add('pdf-optimized');
-      }
-      
       await generatePDF('analysis-content', `meal-analysis-${new Date().toISOString().split('T')[0]}.pdf`);
-      
-      // Remove the temporary class
-      if (analysisContent) {
-        analysisContent.classList.remove('pdf-optimized');
-      }
       
       toast({
         title: "PDF created!",
@@ -117,7 +107,7 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
         
         <h2 className="text-2xl font-bold text-center mb-2">Meal Analysis</h2>
         <div className="flex justify-center mb-6">
-          <span className={`text-sm font-medium px-3 py-1 rounded-full ${confidenceBadgeColor}`}>
+          <span className={`confidence-badge text-sm font-medium px-3 py-1 rounded-full ${confidenceBadgeColor}`}>
             {result.confidenceLevel} Confidence
           </span>
         </div>
@@ -282,7 +272,7 @@ const MacroSummary = ({ macros }: { macros: Macros }) => {
 };
 
 const MacroCircle = ({ value, label, color }: { value: number, label: string, color: string }) => (
-  <div className="flex flex-col items-center">
+  <div className="flex flex-col items-center macro-circle-container">
     <div className="relative h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center">
       <div className="absolute inset-0">
         <svg viewBox="0 0 36 36" className="h-12 w-12 -rotate-90">
@@ -322,7 +312,7 @@ const MacroDetail = ({ value, unit, label }: { value: number, unit: string, labe
 
 const FoodItemCard = ({ item }: { item: FoodItem }) => {
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden food-item-card">
       <CardContent className="p-4">
         <div className="flex justify-between items-center mb-2">
           <h4 className="font-medium">{item.name}</h4>
