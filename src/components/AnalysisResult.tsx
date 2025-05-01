@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CircleCheck, Download, Info, Utensils } from "lucide-react";
+import { CircleCheck, Download, FileText, Info, Utensils } from "lucide-react";
 import { useState, useRef } from "react";
 import {
   Dialog,
@@ -13,7 +13,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FoodAnalysisResult, FoodItem, Macros } from '@/types';
 import { generateDietaryRecommendations } from '@/services/openai';
-import { generatePDF } from '@/util/pdfGenerator';
+import { generatePDF, generateCSV, downloadCSV } from '@/util/pdfGenerator';
 import { useToast } from '@/hooks/use-toast';
 
 interface AnalysisResultProps {
@@ -76,6 +76,31 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
       toast({
         title: "PDF generation failed",
         description: "There was an error creating your PDF. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDownloadCSV = () => {
+    try {
+      toast({
+        title: "Creating CSV...",
+        description: "Preparing your meal analysis data for download."
+      });
+      
+      const csvContent = generateCSV(result);
+      downloadCSV(csvContent, `meal-analysis-${new Date().toISOString().split('T')[0]}.csv`);
+      
+      toast({
+        title: "CSV created!",
+        description: "Your meal analysis data has been downloaded successfully.",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error('Error generating CSV:', error);
+      toast({
+        title: "CSV generation failed",
+        description: "There was an error creating your CSV file. Please try again.",
         variant: "destructive"
       });
     }
@@ -199,7 +224,16 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
           className="flex-1 bg-macrolens-secondary hover:bg-macrolens-secondary/80 text-macrolens-primary border-none group"
         >
           <Download className="mr-2 h-4 w-4 transition-transform group-hover:translate-y-0.5" />
-          Download Analysis as PDF
+          Download as PDF
+        </Button>
+
+        <Button 
+          onClick={handleDownloadCSV}
+          variant="outline" 
+          className="flex-1 bg-macrolens-secondary hover:bg-macrolens-secondary/80 text-macrolens-primary border-none group"
+        >
+          <FileText className="mr-2 h-4 w-4" />
+          Download as CSV
         </Button>
       </div>
 

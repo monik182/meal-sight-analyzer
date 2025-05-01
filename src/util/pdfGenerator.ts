@@ -1,6 +1,7 @@
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { FoodAnalysisResult, FoodItem } from '@/types';
 
 export const generatePDF = async (elementId: string, fileName: string = 'meal-analysis.pdf'): Promise<void> => {
   // Get the HTML element to convert
@@ -88,4 +89,60 @@ export const generatePDF = async (elementId: string, fileName: string = 'meal-an
   } catch (error) {
     console.error('Error generating PDF:', error);
   }
+};
+
+export const generateCSV = (result: FoodAnalysisResult): string => {
+  // Create CSV header row
+  let csv = 'Food Item,Calories (kcal),Protein (g),Fat (g),Carbs (g),Sugar (g)\n';
+  
+  // Add data for each food item
+  result.foodItems.forEach(item => {
+    const { name, macros } = item;
+    // Format each value and escape commas in the food name
+    const escapedName = name.includes(',') ? `"${name}"` : name;
+    const row = [
+      escapedName,
+      Math.round(macros.calories),
+      (Math.round(macros.protein * 10) / 10).toFixed(1),
+      (Math.round(macros.fat * 10) / 10).toFixed(1),
+      (Math.round(macros.carbs * 10) / 10).toFixed(1),
+      (Math.round(macros.sugar * 10) / 10).toFixed(1)
+    ].join(',');
+    
+    csv += row + '\n';
+  });
+  
+  // Add total macros as the final row
+  const totalMacros = result.totalMacros;
+  csv += `Total,${Math.round(totalMacros.calories)},${(Math.round(totalMacros.protein * 10) / 10).toFixed(1)},${(Math.round(totalMacros.fat * 10) / 10).toFixed(1)},${(Math.round(totalMacros.carbs * 10) / 10).toFixed(1)},${(Math.round(totalMacros.sugar * 10) / 10).toFixed(1)}\n`;
+
+  return csv;
+};
+
+export const downloadCSV = (csvContent: string, fileName: string = 'meal-analysis.csv'): void => {
+  // Create a Blob containing the CSV data
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  
+  // Create a download link and trigger the download
+  const link = document.createElement('a');
+  
+  // Check if the browser supports the download attribute
+  if (navigator.msSaveBlob) {
+    // For IE and Edge
+    navigator.msSaveBlob(blob, fileName);
+    return;
+  }
+  
+  // For other browsers
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.setAttribute('download', fileName);
+  
+  // Append to the document temporarily to trigger the download
+  document.body.appendChild(link);
+  link.click();
+  
+  // Clean up
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 };
