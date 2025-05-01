@@ -7,6 +7,7 @@ export type FoodAnalysisResult = {
 export type FoodItem = {
   name: string;
   macros: Macros;
+  portion: { humanReadable: string; grams: number, ounces: number };
 };
 
 export type Macros = {
@@ -15,6 +16,7 @@ export type Macros = {
   fat: number;
   carbs: number;
   sugar: number;
+  fiber: number;
 };
 
 export interface UserProfile {

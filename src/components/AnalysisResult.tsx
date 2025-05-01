@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CircleCheck, Download, FileText, Info, Utensils } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +26,6 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
   const [recommendations, setRecommendations] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const analysisRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   const getConfidenceBadgeColor = (level: string) => {
@@ -245,6 +244,7 @@ const MacroSummary = ({ macros }: { macros: Macros }) => {
   const fatPercent = Math.round((macros.fat / totalGrams) * 100) || 0;
   const carbsPercent = Math.round((macros.carbs / totalGrams) * 100) || 0;
   const sugarPercent = Math.round((macros.sugar / totalGrams) * 100) || 0;
+  const fiberPercent = Math.round((macros.fiber / totalGrams) * 100) || 0;
 
   return (
     <div className="space-y-4">
@@ -258,14 +258,16 @@ const MacroSummary = ({ macros }: { macros: Macros }) => {
           <MacroCircle value={fatPercent} label="Fat" color="bg-yellow-500" />
           <MacroCircle value={carbsPercent} label="Carbs" color="bg-green-500" />
           <MacroCircle value={sugarPercent} label="Sugar" color="bg-red-500" />
+          <MacroCircle value={fiberPercent} label="Fiber" color="bg-gray-500" />
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-2 text-center">
+      <div className="grid grid-cols-5 gap-2 text-center">
         <MacroDetail value={macros.protein} unit="g" label="Protein" />
         <MacroDetail value={macros.fat} unit="g" label="Fat" />
         <MacroDetail value={macros.carbs} unit="g" label="Carbs" />
         <MacroDetail value={macros.sugar} unit="g" label="Sugar" />
+        <MacroDetail value={macros.fiber} unit="g" label="Fiber" />
       </div>
     </div>
   );
@@ -315,10 +317,13 @@ const FoodItemCard = ({ item }: { item: FoodItem }) => {
     <Card className="overflow-hidden food-item-card">
       <CardContent className="p-4">
         <div className="flex justify-between items-center mb-2">
-          <h4 className="font-medium">{item.name}</h4>
+          <div className="flex justify-between mb-2 gap-2 items-center">
+            <h4 className="font-medium">{item.name}</h4>
+            <span className="text-xs text-gray-500">{item.portion.humanReadable} | {item.portion.grams}g</span>
+          </div>
           <span className="text-sm font-semibold">{Math.round(item.macros.calories)} kcal</span>
         </div>
-        <div className="grid grid-cols-4 gap-2 text-center text-sm">
+        <div className="grid grid-cols-5 gap-2 text-center text-sm">
           <div>
             <span className="font-medium">{Math.round(item.macros.protein * 10) / 10}g</span>
             <span className="block text-xs text-gray-500">Protein</span>
@@ -334,6 +339,10 @@ const FoodItemCard = ({ item }: { item: FoodItem }) => {
           <div>
             <span className="font-medium">{Math.round(item.macros.sugar * 10) / 10}g</span>
             <span className="block text-xs text-gray-500">Sugar</span>
+          </div>
+          <div>
+            <span className="font-medium">{Math.round(item.macros.fiber * 10) / 10}g</span>
+            <span className="block text-xs text-gray-500">Fiber</span>
           </div>
         </div>
       </CardContent>

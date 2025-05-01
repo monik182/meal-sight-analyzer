@@ -7,20 +7,22 @@ TASK:
 1. Analyze the provided image.
 2. Determine if the image contains food/meal. If not, respond with a default "Not a food image" result.
 3. If it is food, identify each distinct food item visible in the image.
-4. For each food item, estimate the approximate portion size and its macro nutrient content: calories, protein, fat, and carbs.
-5. Calculate the total macro nutrients for the entire meal.
-6. Provide a confidence level based on image clarity and your ability to identify items accurately.
+4. For each food item, estimate the approximate portion size and its macro nutrient content: calories, protein, fat, sugar, fiber, and carbs.
+5. Provide the portion size in a human-readable format (e.g., "1 cup", "1 serving") and in grams and ounces.
+6. Calculate the total macro nutrients for the entire meal.
+7. Provide a confidence level based on image clarity and your ability to identify items accurately.
 
 YOUR RESPONSE MUST BE VALID JSON in the following format with no additional text:
 {
   "foodItems": [
     {
       "name": "Item Name",
-      "macros": { "calories": number, "protein": number, "fat": number, "carbs": number, "sugar": number }
+      "portion": { "humanReadable": "1 cup", "grams": number, "ounces": number },
+      "macros": { "calories": number, "protein": number, "fat": number, "carbs": number, "sugar": number, "fiber": number }
     }
     // Additional food items...
   ],
-  "totalMacros": { "calories": number, "protein": number, "fat": number, "carbs": number, "sugar": number },
+  "totalMacros": { "calories": number, "protein": number, "fat": number, "carbs": number, "sugar": number, "fiber": number },
   "confidenceLevel": "Low" | "Medium" | "High"
 }
 
@@ -30,7 +32,7 @@ IMPORTANT RULES:
 - If you cannot identify food in the image, return:
   {
     "foodItems": [],
-    "totalMacros": {"calories": 0, "protein": 0, "fat": 0, "carbs": 0, "sugar": 0},
+    "totalMacros": {"calories": 0, "protein": 0, "fat": 0, "carbs": 0, "sugar": 0, "fiber": 0},
     "confidenceLevel": "Low"
   }
 - Base confidence levels on:

@@ -20,22 +20,26 @@ const getMockAnalysis = (): FoodAnalysisResult => {
     foodItems: [
       {
         name: "Grilled Chicken Breast",
-        macros: { calories: 165, protein: 31, fat: 3.6, carbs: 0, sugar: 0 }
+        portion: { humanReadable: "100g", grams: 100, ounces: 3.5274 },
+        macros: { calories: 165, protein: 31, fat: 3.6, carbs: 0, sugar: 0, fiber: 0 }
       },
       {
         name: "Brown Rice",
-        macros: { calories: 215, protein: 5, fat: 1.8, carbs: 45, sugar: 0 }
+        portion: { humanReadable: "1 cup", grams: 195, ounces: 6.88 },
+        macros: { calories: 215, protein: 5, fat: 1.8, carbs: 45, sugar: 0, fiber: 1.8 }
       },
       {
         name: "Steamed Broccoli",
-        macros: { calories: 55, protein: 3.7, fat: 0.6, carbs: 11, sugar: 2 }
+        portion: { humanReadable: "1 cup", grams: 91, ounces: 3.21 },
+        macros: { calories: 55, protein: 3.7, fat: 0.6, carbs: 11, sugar: 2, fiber: 2.6 }
       },
       {
         name: "Olive Oil (1 tbsp)",
-        macros: { calories: 119, protein: 0, fat: 13.5, carbs: 0, sugar: 0 }
+        portion: { humanReadable: "1 tbsp", grams: 14, ounces: 0.49 },
+        macros: { calories: 119, protein: 0, fat: 13.5, carbs: 0, sugar: 0, fiber: 0 }
       }
     ],
-    totalMacros: { calories: 554, protein: 39.7, fat: 19.5, carbs: 56, sugar: 2 },
+    totalMacros: { calories: 554, protein: 39.7, fat: 19.5, carbs: 56, sugar: 2, fiber: 4.4 },
     confidenceLevel: "High"
   };
 };
@@ -72,7 +76,7 @@ const getAnalysis = async (base64Image: string): Promise<FoodAnalysisResult> => 
       console.error("Error parsing JSON:", error);
       return {
         "foodItems": [],
-        "totalMacros": { "calories": 0, "protein": 0, "fat": 0, "carbs": 0, "sugar": 0 },
+        "totalMacros": { "calories": 0, "protein": 0, "fat": 0, "carbs": 0, "sugar": 0, "fiber": 0 },
         "confidenceLevel": "Low"
       }
     }
@@ -93,10 +97,10 @@ export const generateDietaryRecommendations = async (
     });
 
     const foodItemsText = foodAnalysis.foodItems
-      .map(item => `${item.name}: ${item.macros.calories} calories, ${item.macros.protein}g protein, ${item.macros.fat}g fat, ${item.macros.carbs}g carbs, ${item.macros.sugar}g sugar`)
+      .map(item => `${item.name}: ${item.macros.calories} calories, ${item.macros.protein}g protein, ${item.macros.fat}g fat, ${item.macros.carbs}g carbs, ${item.macros.sugar}g sugar, ${item.macros.fiber}g fiber`)
       .join('\n');
 
-    const totalMacrosText = `Total: ${foodAnalysis.totalMacros.calories} calories, ${foodAnalysis.totalMacros.protein}g protein, ${foodAnalysis.totalMacros.fat}g fat, ${foodAnalysis.totalMacros.carbs}g carbs, ${foodAnalysis.totalMacros.sugar}g sugar`;
+    const totalMacrosText = `Total: ${foodAnalysis.totalMacros.calories} calories, ${foodAnalysis.totalMacros.protein}g protein, ${foodAnalysis.totalMacros.fat}g fat, ${foodAnalysis.totalMacros.carbs}g carbs, ${foodAnalysis.totalMacros.sugar}g sugar, ${foodAnalysis.totalMacros.fiber}g fiber`;
 
     const userContext = userProfile ? `
 Additional user context:
