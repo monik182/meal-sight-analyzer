@@ -248,12 +248,12 @@ const MacroSummary = ({ macros }: { macros: Macros }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between mb-1">
-        <div>
+      <div className="flex flex-col md:flex-row md:justify-between mb-1">
+        <div className="mb-4 md:mb-0">
           <span className="text-3xl font-bold">{Math.round(macros.calories)}</span>
           <span className="text-sm text-gray-500 ml-1">kcal</span>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-3 justify-center md:justify-end">
           <MacroCircle value={proteinPercent} label="Protein" color="bg-blue-500" />
           <MacroCircle value={fatPercent} label="Fat" color="bg-yellow-500" />
           <MacroCircle value={carbsPercent} label="Carbs" color="bg-green-500" />
@@ -262,7 +262,7 @@ const MacroSummary = ({ macros }: { macros: Macros }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-2 text-center">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center">
         <MacroDetail value={macros.protein} unit="g" label="Protein" />
         <MacroDetail value={macros.fat} unit="g" label="Fat" />
         <MacroDetail value={macros.carbs} unit="g" label="Carbs" />
@@ -275,9 +275,9 @@ const MacroSummary = ({ macros }: { macros: Macros }) => {
 
 const MacroCircle = ({ value, label, color }: { value: number, label: string, color: string }) => (
   <div className="flex flex-col items-center macro-circle-container">
-    <div className="relative h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center">
+    <div className="relative h-10 w-10 md:h-12 md:w-12 rounded-full bg-gray-100 flex items-center justify-center">
       <div className="absolute inset-0">
-        <svg viewBox="0 0 36 36" className="h-12 w-12 -rotate-90">
+        <svg viewBox="0 0 36 36" className="h-10 w-10 md:h-12 md:w-12 -rotate-90">
           <path
             d={`M18 2.0845
               a 15.9155 15.9155 0 0 1 0 31.831
@@ -316,14 +316,14 @@ const FoodItemCard = ({ item }: { item: FoodItem }) => {
   return (
     <Card className="overflow-hidden food-item-card">
       <CardContent className="p-4">
-        <div className="flex justify-between items-center mb-2">
-          <div className="flex justify-between mb-2 gap-2 items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center mb-2 sm:mb-0 gap-1 sm:gap-2">
             <h4 className="font-medium">{item.name}</h4>
             <span className="text-xs text-gray-500">{item.portion.humanReadable} | {item.portion.grams}g</span>
           </div>
           <span className="text-sm font-semibold">{Math.round(item.macros.calories)} kcal</span>
         </div>
-        <div className="grid grid-cols-5 gap-2 text-center text-sm">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-center text-sm">
           <div>
             <span className="font-medium">{Math.round(item.macros.protein * 10) / 10}g</span>
             <span className="block text-xs text-gray-500">Protein</span>
@@ -336,11 +336,11 @@ const FoodItemCard = ({ item }: { item: FoodItem }) => {
             <span className="font-medium">{Math.round(item.macros.carbs * 10) / 10}g</span>
             <span className="block text-xs text-gray-500">Carbs</span>
           </div>
-          <div>
+          <div className="col-span-3 sm:col-span-1">
             <span className="font-medium">{Math.round(item.macros.sugar * 10) / 10}g</span>
             <span className="block text-xs text-gray-500">Sugar</span>
           </div>
-          <div>
+          <div className="col-span-3 sm:col-span-1">
             <span className="font-medium">{Math.round(item.macros.fiber * 10) / 10}g</span>
             <span className="block text-xs text-gray-500">Fiber</span>
           </div>
@@ -349,3 +349,4 @@ const FoodItemCard = ({ item }: { item: FoodItem }) => {
     </Card>
   );
 };
+
