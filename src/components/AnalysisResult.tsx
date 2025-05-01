@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FoodAnalysisResult, FoodItem, Macros } from '@/types';
-import { generateDietaryRecommendations } from '@/services/openai';
+import { generateDietaryRecommendations } from '@/app/services/openai';
 import { generatePDF, generateCSV, downloadCSV } from '@/util/pdfGenerator';
 import { useToast } from '@/hooks/use-toast';
 

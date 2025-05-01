@@ -6,7 +6,7 @@ import { AnalysisResult } from "@/components/AnalysisResult";
 import { LoadingAnalysis } from "@/components/LoadingAnalysis";
 import { IntroSection } from "@/components/IntroSection";
 import { Footer } from "@/components/Footer";
-import { analyzeFoodImage } from "@/services/openai";
+import { analyzeFoodImage } from "@/app/services/openai";
 import { FoodAnalysisResult } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 

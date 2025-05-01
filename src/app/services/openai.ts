@@ -47,7 +47,7 @@ const getMockAnalysis = (): FoodAnalysisResult => {
 const getAnalysis = async (base64Image: string): Promise<FoodAnalysisResult> => {
   try {
     const openai = new OpenAI({
-      apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+      apiKey: process.env.OPENAI_API_KEY,
       dangerouslyAllowBrowser: true,
     });
 
@@ -92,7 +92,7 @@ export const generateDietaryRecommendations = async (
 ): Promise<string[]> => {
   try {
     const openai = new OpenAI({
-      apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+      apiKey: process.env.OPENAI_API_KEY,
       dangerouslyAllowBrowser: true,
     });
 
