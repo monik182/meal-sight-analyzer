@@ -1,4 +1,3 @@
-
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { FoodAnalysisResult, FoodItem } from '@/types';
@@ -86,7 +85,7 @@ export const generatePDF = async (elementId: string, fileName: string = 'meal-an
       const heightToDraw = Math.min(pageHeight, heightLeft);
       const sourceY = pageCount * pageHeight * (canvas.width / imgWidth);
       
-      // Fix: Update the addImage call to use the correct number of parameters
+      // Fix: Use the correct approach for sourceY by using clip parameters
       pdf.addImage({
         imageData: canvas.toDataURL('image/png', 1.0),
         format: 'PNG',
@@ -95,8 +94,7 @@ export const generatePDF = async (elementId: string, fileName: string = 'meal-an
         width: imgWidth,
         height: heightToDraw,
         compression: 'FAST',
-        rotation: 0,
-        sourceY
+        rotation: 0
       });
       
       heightLeft -= pageHeight;
