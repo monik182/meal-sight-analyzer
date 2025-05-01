@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config "../../tailwind.config.ts";
 
 @layer base {
   :root {
@@ -77,19 +75,24 @@
     @apply bg-macrolens-background text-foreground font-sans;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif tracking-tight font-normal text-gray-800;
     letter-spacing: -0.02em;
   }
-  
+
   h1 {
     @apply text-3xl md:text-4xl;
   }
-  
+
   h2 {
     @apply text-2xl md:text-3xl;
   }
-  
+
   h3 {
     @apply text-xl md:text-2xl;
   }
@@ -130,8 +133,13 @@
 }
 
 @keyframes bounce {
-  from { transform: translateY(0); }
-  to { transform: translateY(-3px); }
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-3px);
+  }
 }
 
 /* Macro circle container for better mobile layout */
@@ -160,7 +168,7 @@
   page-break-inside: avoid !important;
 }
 
-.pdf-optimized h2, 
+.pdf-optimized h2,
 .pdf-optimized h3 {
   break-after: avoid !important;
   margin-top: 15px !important;
@@ -192,13 +200,13 @@
   .pdf-optimized {
     padding: 30mm !important;
   }
-  
+
   .pdf-optimized .card {
     margin: 10mm 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
-  
+
   .pdf-optimized img {
     max-width: 100% !important;
     height: auto !important;
