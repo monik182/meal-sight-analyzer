@@ -11,7 +11,7 @@ export function Header() {
         <nav>
           <ul className="flex gap-4">
             <li>
-              <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/analyze" className="text-sm font-medium hover:text-primary transition-colors">
                 Analyze
               </Link>
             </li>
