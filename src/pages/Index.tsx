@@ -7,7 +7,7 @@ import { LoadingAnalysis } from "@/components/LoadingAnalysis";
 import { IntroSection } from "@/components/IntroSection";
 import { Footer } from "@/components/Footer";
 import { analyzeFoodImage } from "@/services/openai";
-import { FoodAnalysisResult } from "@/types"; // Fixed import from types
+import { FoodAnalysisResult } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 
 type AppState = "intro" | "upload" | "analyzing" | "results";
@@ -58,14 +58,14 @@ const Index = () => {
         return (
           <>
             <IntroSection onStartClick={handleStartClick} />
-            <div ref={uploadSectionRef} className="my-8">
+            <div ref={uploadSectionRef} className="my-12">
               <ImageUploader onImageSelected={handleImageSelected} />
             </div>
           </>
         );
       case "upload":
         return (
-          <div ref={uploadSectionRef} className="py-8">
+          <div ref={uploadSectionRef} className="py-12">
             <ImageUploader onImageSelected={handleImageSelected} />
           </div>
         );
@@ -79,10 +79,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-macrolens-background">
       <Header />
-      <main className="flex-1">
-        <div className="container-narrow py-6">
+      <main className="flex-1 py-4">
+        <div className="container-narrow py-8">
           {renderContent()}
         </div>
       </main>

@@ -21,7 +21,8 @@ export default {
 		extend: {
 			fontFamily: {
 				sans: ["Inter", "system-ui", "sans-serif"],
-				serif: ["Georgia", "serif"],
+				serif: ["Playfair Display", "Georgia", "serif"],
+				display: ["Montserrat", "system-ui", "sans-serif"],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -68,18 +69,23 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				macrolens: {
-					primary: '#4CAF50', // Changed to green
-					'primary-light': '#F1F8E9',
-					secondary: '#A5D6A7',
-					accent: '#8BC34A',
-					background: '#F8FAF5', // Softer background color
-					surface: '#FAFDF7', // Softer surface color
+					primary: '#7AC17D',      // Softer pastel green
+					'primary-light': '#F2FCE2', // Very light green background
+					secondary: '#B8E0B9',    // Softer secondary green
+					accent: '#9DD29F',       // Pastel accent green
+					background: '#F9FCF7',   // Even softer, warmer background
+					surface: '#FDFFF9',      // Softer surface color
 				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
+			},
+			boxShadow: {
+				'glow-sm': '0 2px 8px -1px rgba(122, 193, 125, 0.25)',
+				'glow': '0 4px 12px -2px rgba(122, 193, 125, 0.3)',
+				'glow-lg': '0 8px 20px -4px rgba(122, 193, 125, 0.35)',
 			},
 			keyframes: {
 				'accordion-down': {

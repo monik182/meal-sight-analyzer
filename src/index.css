@@ -1,39 +1,41 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 88 54% 95%;
-    --foreground: 120 5% 20%;
+    --background: 90 30% 98%;
+    --foreground: 120 5% 25%;
 
-    --card: 88 54% 98%;
-    --card-foreground: 120 5% 20%;
+    --card: 90 30% 99%;
+    --card-foreground: 120 5% 25%;
 
-    --popover: 88 54% 98%;
-    --popover-foreground: 120 5% 20%;
+    --popover: 90 30% 99%;
+    --popover-foreground: 120 5% 25%;
 
-    --primary: 120 40% 50%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 122 40% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 120 30% 80%;
-    --secondary-foreground: 120 6% 15%;
+    --secondary: 120 30% 92%;
+    --secondary-foreground: 120 6% 25%;
 
     --muted: 120 20% 96%;
     --muted-foreground: 120 4% 46%;
 
-    --accent: 95 70% 50%;
-    --accent-foreground: 120 6% 15%;
+    --accent: 95 40% 60%;
+    --accent-foreground: 120 6% 25%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 70% 65%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 120 20% 88%;
-    --input: 120 20% 88%;
-    --ring: 120 40% 50%;
+    --border: 120 20% 90%;
+    --input: 120 20% 90%;
+    --ring: 122 40% 50%;
 
-    --radius: 1rem;
+    --radius: 1.25rem;
   }
 
   .dark {
@@ -46,7 +48,7 @@
     --popover: 120 5% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 120 40% 50%;
+    --primary: 122 40% 50%;
     --primary-foreground: 120 6% 10%;
 
     --secondary: 120 30% 80%;
@@ -55,7 +57,7 @@
     --muted: 120 5% 17%;
     --muted-foreground: 120 5% 65%;
 
-    --accent: 95 70% 50%;
+    --accent: 95 40% 60%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 63% 31%;
@@ -63,7 +65,7 @@
 
     --border: 120 5% 17%;
     --input: 120 5% 17%;
-    --ring: 120 40% 50%;
+    --ring: 122 40% 50%;
   }
 }
 
@@ -77,7 +79,8 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif tracking-tight font-normal;
+    @apply font-serif tracking-tight font-normal text-gray-800;
+    letter-spacing: -0.02em;
   }
   
   h1 {
@@ -94,11 +97,11 @@
 }
 
 .container-narrow {
-  @apply max-w-3xl mx-auto px-4;
+  @apply max-w-3xl mx-auto px-5 md:px-8;
 }
 
 .search-input {
-  @apply w-full rounded-full py-2.5 px-4 bg-muted text-foreground placeholder-muted-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary/30;
+  @apply w-full rounded-full py-3 px-5 bg-white border border-gray-100 shadow-sm text-foreground placeholder-gray-400 text-sm focus:outline-none focus:ring-1 focus:ring-primary/20;
 }
 
 .tab-active {
@@ -110,11 +113,16 @@
 }
 
 .hover-lift {
-  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-md;
+  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-glow;
 }
 
 .pulse-grow {
   @apply animate-pulse-light hover:scale-105 transition-all duration-300;
+}
+
+/* Button with glow */
+.glow-button {
+  @apply shadow-glow transition-all duration-300 hover:shadow-glow-lg;
 }
 
 /* CSV Button Animation */
