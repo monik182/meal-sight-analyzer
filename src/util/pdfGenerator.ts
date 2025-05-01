@@ -127,9 +127,10 @@ export const downloadCSV = (csvContent: string, fileName: string = 'meal-analysi
   const link = document.createElement('a');
   
   // Check if the browser supports the download attribute
-  if (navigator.msSaveBlob) {
-    // For IE and Edge
-    navigator.msSaveBlob(blob, fileName);
+  // Use proper type checking for the msSaveBlob method
+  if (window.navigator && 'msSaveBlob' in window.navigator) {
+    // For IE and legacy Edge
+    (window.navigator as any).msSaveBlob(blob, fileName);
     return;
   }
   
