@@ -86,18 +86,18 @@ export const generatePDF = async (elementId: string, fileName: string = 'meal-an
       const heightToDraw = Math.min(pageHeight, heightLeft);
       const sourceY = pageCount * pageHeight * (canvas.width / imgWidth);
       
-      pdf.addImage(
-        canvas.toDataURL('image/png', 1.0), 
-        'PNG', 
-        10, // left margin
-        10, // top margin
-        imgWidth, 
-        heightToDraw,
-        '', 
-        'FAST',
-        0,
+      // Fix: Update the addImage call to use the correct number of parameters
+      pdf.addImage({
+        imageData: canvas.toDataURL('image/png', 1.0),
+        format: 'PNG',
+        x: 10, // left margin
+        y: 10, // top margin
+        width: imgWidth,
+        height: heightToDraw,
+        compression: 'FAST',
+        rotation: 0,
         sourceY
-      );
+      });
       
       heightLeft -= pageHeight;
       pageCount++;
@@ -147,7 +147,7 @@ export const downloadCSV = (csvContent: string, fileName: string = 'meal-analysi
   
   // Check if the browser supports the download attribute
   // Use proper type checking for the msSaveBlob method
-  if (window.navigator && 'msSaveBlob' in window.navigator) {
+  if (window.navigator && typeof (window.navigator as any).msSaveBlob === 'function') {
     // For IE and legacy Edge
     (window.navigator as any).msSaveBlob(blob, fileName);
     return;
