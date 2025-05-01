@@ -11,36 +11,76 @@ export const generatePDF = async (elementId: string, fileName: string = 'meal-an
   }
 
   try {
-    // Create canvas from the element
+    // Before generating PDF, apply print-specific styling to ensure proper layout
+    const originalStyle = element.getAttribute('style') || '';
+    element.setAttribute('style', `${originalStyle}; background-color: white; padding: 20px; max-width: 800px;`);
+
+    // Create canvas from the element with higher quality settings
     const canvas = await html2canvas(element, {
-      scale: 2,
+      scale: 2, // Higher scale for better resolution
       useCORS: true,
       logging: false,
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      windowWidth: 1200, // Fixed width to ensure consistent rendering
+      onclone: (clonedDoc) => {
+        const clonedElement = clonedDoc.getElementById(elementId);
+        if (clonedElement) {
+          // Improve spacing in the cloned element
+          clonedElement.style.padding = '20px';
+          
+          // Ensure text is properly aligned
+          const textElements = clonedElement.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, div');
+          textElements.forEach((el) => {
+            (el as HTMLElement).style.margin = '8px 0';
+          });
+        }
+      }
     });
     
-    // Calculate dimensions for PDF (A4 format)
-    const imgWidth = 210; // A4 width in mm
-    const pageHeight = 297; // A4 height in mm
-    const imgHeight = canvas.height * imgWidth / canvas.width;
+    // Restore original styling
+    element.setAttribute('style', originalStyle);
     
-    // Create new PDF
+    // Calculate dimensions for PDF (A4 format)
+    const imgWidth = 190; // A4 width in mm minus margins
+    const pageHeight = 277; // A4 height in mm minus margins
+    const margin = 10; // 10mm margin
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    // Create new PDF with margins
     const pdf = new jsPDF('p', 'mm', 'a4');
     
-    // Add image to PDF
+    // Add image to PDF with margins
     let heightLeft = imgHeight;
     let position = 0;
     
-    // Add first page
-    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+    // Add first page (with top margin)
+    pdf.addImage(
+      canvas.toDataURL('image/png'), 
+      'PNG', 
+      margin, // left margin
+      margin, // top margin
+      imgWidth, 
+      imgHeight
+    );
+    
     heightLeft -= pageHeight;
     
     // Add additional pages if needed
     while (heightLeft >= 0) {
-      position = heightLeft - imgHeight;
+      // Calculate position to avoid cutting content
+      position = heightLeft - imgHeight + margin; // Add margin offset
+      
       pdf.addPage();
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      pdf.addImage(
+        canvas.toDataURL('image/png'), 
+        'PNG', 
+        margin, // left margin 
+        position, 
+        imgWidth, 
+        imgHeight
+      );
+      
+      heightLeft -= (pageHeight - (2 * margin)); // Account for margins in pagination
     }
     
     // Save PDF

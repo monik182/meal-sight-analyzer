@@ -116,3 +116,45 @@
 .pulse-grow {
   @apply animate-pulse-light hover:scale-105 transition-all duration-300;
 }
+
+/* PDF Optimization Styles */
+.pdf-container {
+  page-break-inside: avoid;
+}
+
+.pdf-optimized {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 20px;
+}
+
+.pdf-optimized .card {
+  break-inside: avoid;
+  margin-bottom: 20px;
+}
+
+.pdf-optimized h2, 
+.pdf-optimized h3 {
+  break-after: avoid;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+/* Ensure proper spacing for PDF elements */
+@media print {
+  .pdf-optimized {
+    padding: 20mm;
+  }
+  
+  .pdf-optimized .card {
+    margin: 5mm 0;
+    break-inside: avoid;
+  }
+  
+  .pdf-optimized img {
+    max-width: 100%;
+    height: auto;
+  }
+}

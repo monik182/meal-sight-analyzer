@@ -53,7 +53,18 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
         description: "Please wait while we generate your meal analysis PDF."
       });
       
+      // Temporarily add a PDF-specific class to optimize for PDF generation
+      const analysisContent = document.getElementById('analysis-content');
+      if (analysisContent) {
+        analysisContent.classList.add('pdf-optimized');
+      }
+      
       await generatePDF('analysis-content', `meal-analysis-${new Date().toISOString().split('T')[0]}.pdf`);
+      
+      // Remove the temporary class
+      if (analysisContent) {
+        analysisContent.classList.remove('pdf-optimized');
+      }
       
       toast({
         title: "PDF created!",
@@ -72,7 +83,7 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
 
   return (
     <div className="w-full animate-fade-in">
-      <div id="analysis-content" className="w-full pb-8">
+      <div id="analysis-content" className="w-full pb-8 pdf-container">
         <div className="flex items-center justify-center mb-6">
           <div className="bg-macrolens-primary-light rounded-full p-3">
             <CircleCheck className="h-8 w-8 text-macrolens-primary" />
