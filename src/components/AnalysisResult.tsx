@@ -262,7 +262,7 @@ const MacroSummary = ({ macros }: { macros: Macros }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-center">
+      <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 text-center">
         <MacroDetail value={macros.protein} unit="g" label="Protein" />
         <MacroDetail value={macros.fat} unit="g" label="Fat" />
         <MacroDetail value={macros.carbs} unit="g" label="Carbs" />
@@ -323,7 +323,7 @@ const FoodItemCard = ({ item }: { item: FoodItem }) => {
           </div>
           <span className="text-sm font-semibold">{Math.round(item.macros.calories)} kcal</span>
         </div>
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-center text-sm">
+        <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 text-center text-sm">
           <div>
             <span className="font-medium">{Math.round(item.macros.protein * 10) / 10}g</span>
             <span className="block text-xs text-gray-500">Protein</span>
