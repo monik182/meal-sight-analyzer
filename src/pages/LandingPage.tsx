@@ -4,8 +4,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { IntroSection } from "@/components/IntroSection";
-import { Link } from "react-router-dom";
 import { ArrowRight, Check, Image, LeafyGreen, LineChart, Sparkles, Zap } from "lucide-react";
+import Link from 'next/link';
 
 export default function LandingPage() {
   const featuresSectionRef = useRef<HTMLDivElement>(null);
@@ -33,7 +33,7 @@ export default function LandingPage() {
               Instantly analyze your meals with AI. Get accurate nutrition information from just a photo.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in" style={{ animationDelay: "200ms" }}>
-              <Link to="/analyze">
+              <Link href="/analyze">
                 <Button 
                   size="lg"
                   className="bg-macrolens-primary hover:bg-macrolens-primary/90 hover-scale px-8 py-6 text-lg rounded-full shadow-md"
@@ -171,7 +171,7 @@ export default function LandingPage() {
               Start analyzing your meals today with MacroLens - no account required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/analyze">
+              <Link href="/analyze">
                 <Button 
                   size="lg"
                   className="bg-macrolens-primary hover:bg-macrolens-primary/90 hover-scale px-8 py-6 text-lg rounded-full shadow-md"
@@ -180,7 +180,7 @@ export default function LandingPage() {
                   <Zap className="ml-2" />
                 </Button>
               </Link>
-              <Link to="/pricing">
+              <Link href="/pricing">
                 <Button 
                   variant="outline" 
                   size="lg"
