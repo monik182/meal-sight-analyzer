@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import { analyzeFoodImage } from "@/app/services/openai";
 import { FoodAnalysisResult } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 type AppState = "intro" | "upload" | "analyzing" | "results";
 
@@ -87,6 +88,7 @@ const Analyze = () => {
         </div>
       </main>
       <Footer />
+      <Toaster />
     </div>
   );
 };
