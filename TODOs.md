@@ -1,10 +1,11 @@
 
-- Migrate to Next
+- Use moderation api
+- Update prompt to return fail reason
+- Meal journal
+- Subscribe to get 3 free tokens
+- For every referral, get 1 free token
+- Migrate to Next ✅
 - Make it downloadable (pdf) ✅
 - Make the pricing page ✅
-- Make the landing page
-- Update prompt to return fail reason
-- Use moderation api
-- Subscribe to get 3 free tokens
+- Make the landing page ✅
 - Add fibre for analysis ✅
-- Meal journal

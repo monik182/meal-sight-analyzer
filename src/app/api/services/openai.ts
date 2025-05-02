@@ -2,12 +2,44 @@ import { mealAnalysisPromptText, getRecommendationsPromptText } from '@/prompts'
 import { FoodAnalysisResult, UserProfile } from '@/types'
 import OpenAI from 'openai'
 
-export const analyzeImageWithAI = async (base64Image: string): Promise<FoodAnalysisResult> => {
-  try {
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    })
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+})
 
+export const isImageSafe = async (base64Image: string): Promise<{ isSafe: boolean, categories: string[] }> => {
+  try {
+    const moderation = await openai.moderations.create({
+      model: "omni-moderation-latest",
+      input: [
+        { type: "text", text: "The user uploaded an image." },
+        {
+          type: "image_url",
+          image_url: {
+            url: base64Image
+          }
+        }
+      ],
+    });
+
+    const categories = moderation.results[0].categories;
+    const flaggedCategories = Object.keys(categories).filter(category => categories[category]);
+    return { isSafe: !moderation.results[0].flagged, categories: flaggedCategories }
+
+  } catch (error) {
+    console.error("Error moderating image:", error)
+    return { isSafe: false, categories: [] }
+  }
+}
+
+export const analyzeImageWithAI = async (base64Image: string): Promise<FoodAnalysisResult> => {
+  const { isSafe, categories } = await isImageSafe(base64Image)
+  if (!isSafe) {
+    const error = new Error("Image contains flagged content: " + categories.join(", "));
+    error.name = "UnsafeContentError";
+    throw error;
+  }
+
+  try {
     const response = await openai.responses.create({
       model: "gpt-4.1-mini",
       input: [
@@ -47,9 +79,6 @@ export const generateRecommendationsWithAI = async (
   userProfile?: UserProfile
 ): Promise<string[]> => {
   try {
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    })
 
     // Format food items and prepare prompt
     const foodItemsText = foodAnalysis.foodItems

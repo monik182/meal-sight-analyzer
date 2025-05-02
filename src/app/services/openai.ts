@@ -21,11 +21,17 @@ const getAnalysis = async (base64Image: string): Promise<FoodAnalysisResult> => 
       },
       body: JSON.stringify({ messages: [{ content: base64Image }] }),
     });
-    const result = await response.json()
-    return result
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to analyze food image");
+    }
+
+    const result = await response.json();
+    return result;
   } catch (error) {
-    console.error("Error analyzing food image:", error)
-    throw new Error("Failed to analyze food image")
+    console.error("Error analyzing food image:", error);
+    throw error;
   }
 }
 

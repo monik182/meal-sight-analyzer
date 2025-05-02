@@ -32,7 +32,7 @@ const Analyze = () => {
       toast({
         variant: "destructive",
         title: "Analysis failed",
-        description: "We couldn't analyze your meal. Please try again with a different image."
+        description: error.message || "We couldn't analyze your meal. Please try again with a different image."
       });
       setAppState("upload");
     }
