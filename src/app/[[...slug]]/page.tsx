@@ -1,9 +1,9 @@
-import Index from '@/pages/Index'
+import LandingPage from '@/app/landing/page'
 
 export function generateStaticParams() {
   return [{ slug: [''] }]
 }
 
 export default function Page() {
-  return <Index />  // We'll update this
+  return <LandingPage />
 }
