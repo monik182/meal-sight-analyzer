@@ -22,6 +22,7 @@ export const ImageUploader = ({ onImageSelected, onConfirmClick }: ImageUploader
   }
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [isFromCamera, setIsFromCamera] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -41,6 +42,7 @@ export const ImageUploader = ({ onImageSelected, onConfirmClick }: ImageUploader
     const reader = new FileReader();
     reader.onload = async () => {
       setPreviewImage(reader.result as string);
+      setIsFromCamera(false);
       const base64Image = await fileToBase64(file)
       onImageSelected(base64Image);
     };
@@ -50,7 +52,7 @@ export const ImageUploader = ({ onImageSelected, onConfirmClick }: ImageUploader
   const handleCameraClick = () => {
     const photo = camera.current.takePhoto()
     setPreviewImage(photo);
-    const file = new File([photo], 'photo.jpg', { type: 'image/jpeg' });
+    setIsFromCamera(true);
     //FIXME: fix error message, is returning flagged!
     onImageSelected(photo);
     setIsCameraOpen(false);
@@ -68,6 +70,13 @@ export const ImageUploader = ({ onImageSelected, onConfirmClick }: ImageUploader
     setIsCameraOpen(true);
     onImageSelected('');
     setPreviewImage(null);
+  };
+
+  const onCancel = () => {
+    setPreviewImage(null);
+    setIsFromCamera(false);
+    setIsCameraOpen(false);
+    onImageSelected('');
   };
 
   return (
@@ -107,7 +116,8 @@ export const ImageUploader = ({ onImageSelected, onConfirmClick }: ImageUploader
       )}
 
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
-          {!isCameraOpen && !previewImage && (
+          {/* Take Photo / Capture button */}
+          {(!previewImage && !isCameraOpen || previewImage && !isFromCamera) && (
             <Button
               onClick={() => setIsCameraOpen(true)}
               className="flex-1 bg-macrolens-primary hover:bg-macrolens-primary/90 flex gap-2 items-center justify-center rounded-full w-full"
@@ -116,7 +126,7 @@ export const ImageUploader = ({ onImageSelected, onConfirmClick }: ImageUploader
               Take Photo
             </Button>
           )} 
-          {isCameraOpen && !previewImage && (
+          {!previewImage && isCameraOpen && (
             <Button
               onClick={handleCameraClick}
               className="flex-1 bg-macrolens-primary hover:bg-macrolens-primary/90 flex gap-2 items-center justify-center rounded-full w-full"
@@ -125,7 +135,9 @@ export const ImageUploader = ({ onImageSelected, onConfirmClick }: ImageUploader
               Capture
             </Button>
           )}
-          {previewImage && (
+          
+          {/* Take another photo button - only shown when there's a preview */}
+          {previewImage && isFromCamera && (
             <Button
               onClick={activateCamera}
               className="flex-1 bg-macrolens-primary hover:bg-macrolens-primary/90 flex gap-2 items-center justify-center rounded-full w-full"
@@ -135,6 +147,17 @@ export const ImageUploader = ({ onImageSelected, onConfirmClick }: ImageUploader
             </Button>
           )}
 
+          {/* Upload Photo / Upload Another Photo button */}
+          <Button
+            onClick={handleUploadClick}
+            variant="outline"
+            className="flex-1 border-macrolens-primary text-macrolens-primary hover:bg-macrolens-primary-light flex gap-2 items-center justify-center rounded-full"
+          >
+            <Upload className="w-5 h-5" />
+            {previewImage && !isFromCamera ? "Upload Another Photo" : "Upload Photo"}
+          </Button>
+
+          {/* Confirm button - only shown when there's a preview image */}
           {onConfirmClick && previewImage && (
             <Button
               onClick={onConfirmClick}
@@ -143,15 +166,15 @@ export const ImageUploader = ({ onImageSelected, onConfirmClick }: ImageUploader
               Confirm
             </Button>
           )}
-
-        <Button
-          onClick={handleUploadClick}
-          variant="outline"
-          className="flex-1 border-macrolens-primary text-macrolens-primary hover:bg-macrolens-primary-light flex gap-2 items-center justify-center rounded-full"
-        >
-          <Upload className="w-5 h-5" />
-          Upload Photo
-        </Button>
+          {previewImage && (
+            <Button
+              onClick={onCancel}
+              variant="outline"
+              className="flex-1 border-macrolens-primary text-macrolens-primary hover:bg-macrolens-primary-light flex gap-2 items-center justify-center rounded-full"
+            >
+              Cancel
+            </Button>
+          )}
       </div>
     </div>
   );
