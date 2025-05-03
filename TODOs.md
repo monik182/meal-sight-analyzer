@@ -3,7 +3,7 @@
 - Deploy to vercel/cloudflare?
 
 # Must have after launch
-- Add email registration for 1 try
+- Add email registration for 1 try - See how it works
 - Track user ids that make requests
 - Integrate with Stripe
 - Integrate Supabase Auth 
