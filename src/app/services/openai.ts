@@ -1,9 +1,7 @@
 import { FoodAnalysisResult, UserProfile } from '@/types'
-import { fileToBase64 } from '@/util'
 
-export const analyzeFoodImage = async (image: File): Promise<FoodAnalysisResult> => {
+export const analyzeFoodImage = async (base64Image: string): Promise<FoodAnalysisResult> => {
   try {
-    const base64Image = await fileToBase64(image)
 
     return getAnalysis(base64Image)
   } catch (error) {

@@ -229,7 +229,7 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
       <div className="flex justify-center mt-8">
         <Button 
           onClick={onReset}
-          className="bg-macrolens-primary hover:bg-macrolens-secondary"
+          className="bg-macrolens-primary hover:bg-macrolens-secondary w-full md:w-auto"
         >
           Analyze Another Meal
         </Button>

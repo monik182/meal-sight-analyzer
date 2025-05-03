@@ -11,21 +11,25 @@ import { FoodAnalysisResult } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 
-type AppState = "intro" | "upload" | "analyzing" | "results";
+type AppState = "intro" | "upload" | "confirm" | "analyzing" | "results";
 
 const Analyze = () => {
   const [appState, setAppState] = useState<AppState>("intro");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [analysisResult, setAnalysisResult] = useState<FoodAnalysisResult | null>(null);
+  const [base64Image, setBase64Image] = useState<string | null>(null);
   const uploadSectionRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  const handleImageSelected = async (file: File) => {
-    setSelectedImage(file);
+  const handleImageSelected = (base64Image: string) => {
+    setAppState("confirm");
+    setBase64Image(base64Image);
+  };
+
+  const handleConfirmClick = async () => {
     setAppState("analyzing");
-    
+
     try {
-      const result = await analyzeFoodImage(file);
+      const result = await analyzeFoodImage(base64Image);
       setAnalysisResult(result);
       setAppState("results");
     } catch (error) {
@@ -47,7 +51,6 @@ const Analyze = () => {
   };
 
   const handleReset = () => {
-    setSelectedImage(null);
     setAnalysisResult(null);
     setAppState("upload");
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -65,9 +68,10 @@ const Analyze = () => {
           </>
         );
       case "upload":
+      case "confirm":
         return (
           <div ref={uploadSectionRef} className="py-12">
-            <ImageUploader onImageSelected={handleImageSelected} />
+            <ImageUploader onImageSelected={handleImageSelected} onConfirmClick={handleConfirmClick} />
           </div>
         );
       case "analyzing":
