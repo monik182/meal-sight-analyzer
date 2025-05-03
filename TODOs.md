@@ -1,4 +1,9 @@
-# Must have
+# Prelaunch
+- Fix non recognized formats error
+- Deploy to vercel/cloudflare?
+
+# Must have after launch
+- Add email registration for 1 try
 - Track user ids that make requests
 - Integrate with Stripe
 - Integrate Supabase Auth 
@@ -12,6 +17,7 @@
 - Meal journal
 - Subscribe to get 3 free tokens
 - For every referral, get 1 free token
+- "Offline" version - users use their own openai api key
 
 # Done
 - Use moderation api ✅

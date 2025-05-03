@@ -53,7 +53,7 @@ export const AnalysisResult = ({ result, onReset }: AnalysisResultProps) => {
         description: "Please wait while we generate your meal analysis PDF."
       });
       
-      await generatePDF('analysis-content', `meal-analysis-${new Date().toISOString().split('T')[0]}.pdf`);
+      await generatePDF('analysis-content', `meal-analysis-${new Date().toISOString().split('T')[0]}.pdf`, result, recommendations);
       
       toast({
         title: "PDF created!",
